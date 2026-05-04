@@ -1,5 +1,8 @@
 import flet as ft
 
+from database.course_DAO import CourseDAO
+from database.course_DTO import CourseDTO
+
 
 class Controller:
     def __init__(self, view, model):
@@ -17,3 +20,6 @@ class Controller:
             return
         self._view.txt_result.controls.append(ft.Text(f"Hello, {name}!"))
         self._view.update_page()
+
+    def handle_load_courses_list(self) -> list[CourseDTO]:
+        return CourseDAO.get_available_courses()

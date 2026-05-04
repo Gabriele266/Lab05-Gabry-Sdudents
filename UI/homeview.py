@@ -1,7 +1,9 @@
 import flet as ft
 
+from database.course_DTO import CourseDTO
 
-class View(ft.UserControl):
+@ft.control
+class HomeView(ft.View):
     def __init__(self, page: ft.Page):
         super().__init__()
         # page stuff
@@ -11,17 +13,19 @@ class View(ft.UserControl):
         self._page.theme_mode = ft.ThemeMode.LIGHT
         # controller (it is not initialized. Must be initialized in the main, after the controller is created)
         self._controller = None
+
         # graphical elements
         self._title = None
         self.txt_name = None
         self.btn_hello = None
         self.txt_result = None
         self.txt_container = None
+        self.course_dropdown = None
 
     def load_interface(self):
         """Function that loads the graphical elements of the view"""
         # title
-        self._title = ft.Text("Hello World", color="blue", size=24)
+        self._title = ft.Text("App Gestione Studenti", color="blue", size=24)
         self._page.controls.append(self._title)
 
         #ROW with some controls
@@ -32,11 +36,13 @@ class View(ft.UserControl):
             hint_text="Insert a your name"
         )
 
-        # button for the "hello" reply
-        self.btn_hello = ft.ElevatedButton(text="Hello", on_click=self._controller.handle_hello)
-        row1 = ft.Row([self.txt_name, self.btn_hello],
-                      alignment=ft.MainAxisAlignment.CENTER)
-        self._page.controls.append(row1)
+        self.course_dropdown = ft.Dropdown(
+            width = 220,
+            label = "Corso",
+            hint_text = "Selezionare un corso",
+            options= HomeView.__map_course_to_option__(self.controller.handle_load_courses_list())
+        )
+        self._page.controls.append(self.course_dropdown)
 
         # List View where the reply is printed
         self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
@@ -53,6 +59,14 @@ class View(ft.UserControl):
 
     def set_controller(self, controller):
         self._controller = controller
+
+    @staticmethod
+    def __map_course_to_option__(courses: list[CourseDTO]) -> list[ft.DropdownOption]:
+        """Maps a list of courses (retrieved from the db to a map of controls for the UI"""
+        return list(map(lambda course: ft.DropdownOption(
+            key=course.codins,
+            content=ft.Text(value=course.__str__())
+        ), courses))
 
     def create_alert(self, message):
         """Function that opens a popup alert window, displaying a message

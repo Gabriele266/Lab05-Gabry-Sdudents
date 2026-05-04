@@ -21,6 +21,7 @@ class HomeView(ft.View):
         self.txt_result = None
         self.txt_container = None
         self.course_dropdown = None
+        self.results_list = None
 
     def load_interface(self):
         """Function that loads the graphical elements of the view"""
@@ -37,16 +38,35 @@ class HomeView(ft.View):
         )
 
         self.course_dropdown = ft.Dropdown(
-            width = 220,
+            width = 500,
             label = "Corso",
             hint_text = "Selezionare un corso",
             options= HomeView.__map_course_to_option__(self.controller.handle_load_courses_list())
         )
-        self._page.controls.append(self.course_dropdown)
+        self._page.controls.append(ft.Row(
+            controls= [
+                self.course_dropdown,
+                ft.Button(
+                    content="Cerca iscritti",
+                    on_click=self.controller.handle_search_subscribers
+                )
+            ]
+        ))
 
-        # List View where the reply is printed
-        self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
-        self._page.controls.append(self.txt_result)
+        self.results_list = ft.ListView(
+                height=300,
+                auto_scroll=True,
+            controls=[
+                ft.Text("Ciao"),
+                ft.Text("Ciao"),
+            ])
+
+        self._page.controls.append(ft.Container(
+            border=ft.Border.all(2, ft.Colors.BLACK),
+            padding=10,
+            content=ft.Column(controls= [self.results_list])
+        ))
+
         self._page.update()
 
     @property

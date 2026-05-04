@@ -21,5 +21,8 @@ class Controller:
         self._view.txt_result.controls.append(ft.Text(f"Hello, {name}!"))
         self._view.update_page()
 
+    def handle_search_subscribers(self, event):
+        print("Search subscribers")
+
     def handle_load_courses_list(self) -> list[CourseDTO]:
         return CourseDAO.get_available_courses()

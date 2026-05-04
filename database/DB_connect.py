@@ -20,4 +20,22 @@ def get_connection() -> mysql.connector.connection:
 
 
 class DBConnect:
-    pass
+    """Unique class to handle database connections"""
+    __connection__ = None
+
+    def __init__(self):
+        raise NotImplementedError("This is a singleton, do not instanciate")
+
+    @classmethod
+    def connect(cls) -> mysql.connector.connection:
+        if cls.__connection__ is not None:
+            return cls.__connection__
+
+        else:
+            cls.__connection__ = get_connection()
+            return cls.__connection__
+
+    @classmethod
+    def close(cls):
+        if cls.__connection__ is not None:
+            cls.__connection__.close()

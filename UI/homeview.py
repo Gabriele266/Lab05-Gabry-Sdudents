@@ -18,7 +18,6 @@ class HomeView(ft.View):
         self._title = None
         self.txt_name = None
         self.btn_hello = None
-        self.txt_result = None
         self.txt_container = None
         self.course_dropdown = None
         self.results_list = None
@@ -28,6 +27,7 @@ class HomeView(ft.View):
         # title
         self._title = ft.Text("App Gestione Studenti", color="blue", size=24)
         self._page.controls.append(self._title)
+        self._page.on_close = self.controller.handle_close
 
         #ROW with some controls
         # text field for the name

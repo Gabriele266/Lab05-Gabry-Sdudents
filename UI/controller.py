@@ -24,16 +24,16 @@ class Controller:
         self._view.update_page()
 
     def handle_search_subscribers(self, event):
-        print("Search subscribers")
-        codIns = self._view.course_dropdown.value
+        cod_ins = self._view.course_dropdown.value
 
-        if codIns is None:
+        if cod_ins is None:
             self._view.create_alert("Selezionare un corso")
             return
 
-        print(codIns)
-        res: set[StudentDTO] = CourseDAO.get_subscribers_to_course(codIns)
-        self._view.results_list.controls = []       # clear controls
+        res: set[StudentDTO] = CourseDAO.get_subscribers_to_course(cod_ins)
+        self._view.results_list.controls = [ft.Container(
+            margin=20,
+            content=ft.Text(f"Ci sono {len(res)} iscritti al corso {cod_ins}", size=24, color=ft.Colors.BLUE, weight=ft.FontWeight.W_600))]       # clear controls
 
         for student in res:
             self._view.results_list.controls.append(ft.Text(f"{student.nome} {student.cognome} -- MATRICOLA {student.matricola}"))

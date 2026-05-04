@@ -4,7 +4,7 @@ from database.DB_connect import get_connection
 from dataclasses import dataclass
 
 @dataclass
-class StudentDAO:
+class StudentDTO:
     matricola: int
     cognome: str
     nome: str

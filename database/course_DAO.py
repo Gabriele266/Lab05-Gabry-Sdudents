@@ -3,7 +3,9 @@
 from database.DB_connect import get_connection
 import mysql.connector
 
+from database.StudentDAO import StudentDAO
 from database.course_DTO import CourseDTO
+from database.student_DTO import StudentDTO
 
 
 class CourseDAO:
@@ -37,3 +39,24 @@ class CourseDAO:
         cursor.close()
         cnx.close()
         return l
+
+    @classmethod
+    def get_subscribers_to_course(cls, course_codins: str) -> set[StudentDTO]:
+        """Returns a unique set of students who are subscribed to the course"""
+        cnx = cls.connect()
+        cursor = cnx.cursor()
+
+        query = """SELECT * FROM iscrizione 
+                   WHERE codins=%s;"""
+
+        data = (course_codins,)
+        cursor.execute(query, data)
+
+        students = set()
+        for (matricola, codins) in cursor:
+            students.add(StudentDAO.get_student_by_id(matricola))
+
+        cursor.close()
+        cnx.close()
+
+        return students

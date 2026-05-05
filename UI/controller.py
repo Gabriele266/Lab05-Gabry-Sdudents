@@ -1,6 +1,7 @@
 import flet as ft
 
 from database.DB_connect import DBConnect
+from database.StudentDAO import StudentDAO
 from database.course_DAO import CourseDAO
 from database.course_DTO import CourseDTO
 from database.student_DTO import StudentDTO
@@ -40,6 +41,32 @@ class Controller:
             self._view.results_list.controls.append(ft.Text(f"{student.nome} {student.cognome} -- MATRICOLA {student.matricola}"))
 
         self._view.update_page()
+
+    def handle_search_student_by_matricola(self, event):
+        matricola = self._model.matricola_search
+
+        if matricola is None or matricola == "":
+            self._view.create_alert("Inserire una matricola")
+            return
+
+        if len(matricola) != 6:
+            self._view.create_alert("La matricola deve essere un numero di 6 cifre")
+            return
+
+        result = StudentDAO.get_student_by_id(int(matricola))
+        if result is None:
+            self._view.create_alert("Nessuno studente esiste con quella matricola")
+            return
+
+        self._view.name_field.value = result.nome
+        self._view.surname_field.value = result.cognome
+        self._view.update_page()
+
+
+    def handle_change_matricola(self, e):
+        self._model.matricola_search = e.data
+        self._view.name_field.value = ""
+        self._view.surname_field.value = ""
 
     def handle_close(self):
         print("Good bye")

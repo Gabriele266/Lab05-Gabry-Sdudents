@@ -21,6 +21,8 @@ class HomeView(ft.View):
         self.txt_container = None
         self.course_dropdown = None
         self.results_list = None
+        self.name_field = None
+        self.surname_field = None
 
     def load_interface(self):
         """Function that loads the graphical elements of the view"""
@@ -60,6 +62,30 @@ class HomeView(ft.View):
                 ft.Text("Ciao"),
                 ft.Text("Ciao"),
             ])
+
+        self.name_field = ft.TextField(read_only=True, label="Nome")
+        self.surname_field = ft.TextField(read_only=True, label="Cognome")
+
+        self._page.controls.append(ft.Row(
+            controls= [
+                ft.TextField(label="Matricola",
+                             hint_text="Inserisci una matricola",
+                             input_filter=ft.InputFilter(
+                                 allow=False,
+                                 regex_string=r"^\d{0,6}$"
+                             ),
+                             on_change=self.controller.handle_change_matricola),
+                self.name_field,
+                self.surname_field
+            ]
+        ))
+        self._page.controls.append(ft.Row(
+            controls = [
+                ft.Button("Cerca studente", on_click=self.controller.handle_search_student_by_matricola),
+                ft.Button("Cerca corsi"),
+                ft.Button("Iscrivi studente al corso")
+            ]
+        ))
 
         self._page.controls.append(ft.Container(
             border=ft.Border.all(2, ft.Colors.BLACK),

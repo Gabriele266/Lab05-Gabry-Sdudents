@@ -91,9 +91,8 @@ class HomeView(ft.View):
     def create_alert(self, message):
         """Function that opens a popup alert window, displaying a message
         :param message: the message to be displayed"""
-        dlg = ft.AlertDialog(title=ft.Text(message))
-        self._page.dialog = dlg
-        dlg.open = True
+        dlg = ft.AlertDialog(title=ft.Text(message, color=ft.Colors.RED))
+        self._page.show_dialog(dlg)
         self._page.update()
 
     def update_page(self):

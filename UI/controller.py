@@ -26,8 +26,9 @@ class Controller:
     def handle_search_subscribers(self, event):
         cod_ins = self._view.course_dropdown.value
 
-        if cod_ins is None:
+        if cod_ins is None or cod_ins == "":
             self._view.create_alert("Selezionare un corso")
+            self._view.update_page()
             return
 
         res: set[StudentDTO] = CourseDAO.get_subscribers_to_course(cod_ins)

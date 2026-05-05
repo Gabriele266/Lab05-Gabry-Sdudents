@@ -62,6 +62,24 @@ class Controller:
         self._view.surname_field.value = result.cognome
         self._view.update_page()
 
+    def handle_search_courses(self, event):
+        matricola = self._model.matricola_search
+
+        if matricola is None or matricola == "":
+            self._view.create_alert("Inserire una matricola")
+            return
+
+        if len(matricola) != 6:
+            self._view.create_alert("La matricola deve essere un numero di 6 cifre")
+            return
+
+        try:
+            result = CourseDAO.get_courses_for_student(int(matricola))
+
+            self._view.results_list.controls = [self._view.map_subscription_to_table(result)]
+            self._view.update_page()
+        except ValueError:
+            self._view.create_alert(f"Lo studente {matricola} non risulta nel database")
 
     def handle_change_matricola(self, e):
         self._model.matricola_search = e.data

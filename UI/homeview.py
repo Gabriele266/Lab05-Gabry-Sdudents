@@ -82,7 +82,7 @@ class HomeView(ft.View):
         self._page.controls.append(ft.Row(
             controls = [
                 ft.Button("Cerca studente", on_click=self.controller.handle_search_student_by_matricola),
-                ft.Button("Cerca corsi"),
+                ft.Button("Cerca corsi", on_click=self.controller.handle_search_courses),
                 ft.Button("Iscrivi studente al corso")
             ]
         ))
@@ -113,6 +113,32 @@ class HomeView(ft.View):
             key=course.codins,
             content=ft.Text(value=course.__str__())
         ), courses))
+
+    @staticmethod
+    def map_subscription_to_table(courses: list[CourseDTO]) -> ft.DataTable:
+        """Map a list of courses (where the student is suscribed) to a table"""
+        return ft.DataTable(
+            columns=[
+                ft.DataColumn(
+                    label=ft.Text("Nome del corso")
+                ),
+                ft.DataColumn(
+                    label=ft.Text("Codice del corso")
+                ),
+                ft.DataColumn(
+                    label=ft.Text("CFU assegnati")
+                ),
+                ft.DataColumn(
+                    label=ft.Text("Periodo didattico")
+                )
+            ],
+            rows= [ft.DataRow(cells=[
+                ft.DataCell(ft.Text(course.name)),
+                ft.DataCell(ft.Text(course.codins)),
+                ft.DataCell(ft.Text(str(course.credits))),
+                ft.DataCell(ft.Text(str(course.pd))),
+            ]) for course in courses ]
+        )
 
     def create_alert(self, message):
         """Function that opens a popup alert window, displaying a message

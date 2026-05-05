@@ -41,3 +41,29 @@ class CourseDAO:
         cursor.close()
 
         return students
+
+    @classmethod
+    def get_courses_for_student(cls, student_id: int) -> list[CourseDTO]:
+        """Search all the courses that a student has been subscribed to"""
+
+        # Verify if the student exists
+        if StudentDAO.get_student_by_id(student_id) is None:
+            raise ValueError("Student not found in the database")
+
+        cnx = DBConnect.connect()
+        cursor = cnx.cursor(dictionary=True)
+
+        query = """SELECT * FROM iscrizione, corso
+                WHERE matricola=%s AND iscrizione.codins=corso.codins;"""
+
+        data = (student_id,)
+        cursor.execute(query, data)
+        l = []
+        for row in cursor.fetchall():
+            l.append(CourseDTO(codins=row["codins"],
+                               credits=row["crediti"],
+                               name=row["nome"],
+                               pd=row["pd"]))
+
+        cursor.close()
+        return l

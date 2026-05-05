@@ -24,8 +24,11 @@ class Controller:
         self._view.txt_result.controls.append(ft.Text(f"Hello, {name}!"))
         self._view.update_page()
 
+    def handle_course_select(self, event):
+        self._model.selected_course_code = event.data
+
     def handle_search_subscribers(self, event):
-        cod_ins = self._view.course_dropdown.value
+        cod_ins = self._model.selected_course_code
 
         if cod_ins is None or cod_ins == "":
             self._view.create_alert("Selezionare un corso")
@@ -80,6 +83,10 @@ class Controller:
             self._view.update_page()
         except ValueError:
             self._view.create_alert(f"Lo studente {matricola} non risulta nel database")
+
+    def handle_subscribe_student(self):
+        pass
+
 
     def handle_change_matricola(self, e):
         self._model.matricola_search = e.data

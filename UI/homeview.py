@@ -43,7 +43,8 @@ class HomeView(ft.View):
             width = 500,
             label = "Corso",
             hint_text = "Selezionare un corso",
-            options= HomeView.__map_course_to_option__(self.controller.handle_load_courses_list())
+            options= HomeView.__map_course_to_option__(self.controller.handle_load_courses_list()),
+            on_select=self.controller.handle_course_select
         )
         self._page.controls.append(ft.Row(
             controls= [

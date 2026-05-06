@@ -84,7 +84,7 @@ class HomeView(ft.View):
             controls = [
                 ft.Button("Cerca studente", on_click=self.controller.handle_search_student_by_matricola),
                 ft.Button("Cerca corsi", on_click=self.controller.handle_search_courses),
-                ft.Button("Iscrivi studente al corso")
+                ft.Button("Iscrivi studente al corso", on_click=self.controller.handle_subscribe_student)
             ]
         ))
 
@@ -141,10 +141,11 @@ class HomeView(ft.View):
             ]) for course in courses ]
         )
 
-    def create_alert(self, message):
+    def create_alert(self, message, color: ft.Colors = None):
         """Function that opens a popup alert window, displaying a message
+        :param color: Color to display the alert
         :param message: the message to be displayed"""
-        dlg = ft.AlertDialog(title=ft.Text(message, color=ft.Colors.RED))
+        dlg = ft.AlertDialog(title=ft.Text(message, color=(color if color is not None else ft.Colors.RED )))
         self._page.show_dialog(dlg)
         self._page.update()
 

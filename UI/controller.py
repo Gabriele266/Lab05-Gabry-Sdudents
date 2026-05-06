@@ -4,6 +4,7 @@ from database.DB_connect import DBConnect
 from database.StudentDAO import StudentDAO
 from database.course_DAO import CourseDAO
 from database.course_DTO import CourseDTO
+from database.iscrizione_DAO import IscrizioneDAO
 from database.student_DTO import StudentDTO
 
 
@@ -13,16 +14,6 @@ class Controller:
         self._view = view
         # the model, which implements the logic of the program and holds the data
         self._model = model
-
-    def handle_hello(self, e):
-        """Simple function to handle a button-pressed event,
-        and consequently print a message on screen"""
-        name = self._view.txt_name.value
-        if name is None or name == "":
-            self._view.create_alert("Inserire il nome")
-            return
-        self._view.txt_result.controls.append(ft.Text(f"Hello, {name}!"))
-        self._view.update_page()
 
     def handle_course_select(self, event):
         self._model.selected_course_code = event.data
@@ -85,8 +76,26 @@ class Controller:
             self._view.create_alert(f"Lo studente {matricola} non risulta nel database")
 
     def handle_subscribe_student(self):
-        pass
+        matricola = self._model.matricola_search
+        codins = self._model.selected_course_code
 
+        if matricola is None or matricola == "":
+            self._view.create_alert("Inserire una matricola da iscrivere")
+            return
+        if len(matricola) != 6:
+            self._view.create_alert("La matricola deve essere un numero di 6 cifre")
+            return
+
+        if codins is None or codins == "":
+            self._view.create_alert("Inserire un codice insegnamento")
+            return
+
+        try:
+           IscrizioneDAO.subscribe_student_to_course(matricola, codins)
+
+           self._view.create_alert(f"Lo studente {matricola} è stato iscritto al corso {codins}", color=ft.Colors.GREEN)
+        except ValueError as e:
+            self._view.create_alert(e.__str__())
 
     def handle_change_matricola(self, e):
         self._model.matricola_search = e.data
